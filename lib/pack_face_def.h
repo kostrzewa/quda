@@ -936,9 +936,9 @@ template <int dagger, typename FloatN>
 __global__ void packFaceWilsonKernel(PackParam<FloatN> param)
 {
   const int nFace = 1; // 1 face for Wilson
-  int ctaIter = 0;
-
-  while (int face_idx = (ctaIter*gridDim.x + blockIdx.x)*blockDim.x + threadIdx.x < param.threads) {
+  int threadId = blockIdx.x*blockDim.x + threadIdx.x;
+  while (threadId < param.threads) {
+    int face_idx = threadId;
     
     // determine which dimension we are packing
     const int dim = dimFromFaceIndex(face_idx, param);
@@ -992,7 +992,7 @@ __global__ void packFaceWilsonKernel(PackParam<FloatN> param)
       }
     }
 
-    ctaIter++;
+    threadId += gridDim.x*blockDim.x;
   }
 
 }
@@ -1117,9 +1117,9 @@ template <int dagger, typename FloatN, typename Float>
 __global__ void packTwistedFaceWilsonKernel(Float a, Float b, PackParam<FloatN> param)
 {
   const int nFace = 1; // 1 face for Wilson
-  int ctaIter = 0;
-
-  while (int face_idx = (ctaIter*gridDim.x + blockIdx.x)*blockDim.x + threadIdx.x < param.threads) {
+  int threadId = blockIdx.x*blockDim.x + threadIdx.x;
+  while (threadId < param.threads) {
+    int face_idx = threadId;
 
     // determine which dimension we are packing
     const int dim = dimFromFaceIndex(face_idx, param);
@@ -1173,7 +1173,7 @@ __global__ void packTwistedFaceWilsonKernel(Float a, Float b, PackParam<FloatN> 
       }
     }
 
-    ctaIter++;
+    threadId += gridDim.x*blockDim.x;
   }
 }
 
@@ -1256,6 +1256,7 @@ class PackFace : public Tunable {
   int sharedBytesPerThread() const { return 0; }
   int sharedBytesPerBlock(const TuneParam &param) const { return 0; }
   
+  bool advanceSharedBytes(TuneParam &param) const { return false; } // Don't tune the shared memory
   /*bool advanceGridDim(TuneParam &param) const { return false; } // Don't tune the grid dimensions.
   bool advanceBlockDim(TuneParam &param) const {
     bool advance = Tunable::advanceBlockDim(param);
@@ -1295,7 +1296,7 @@ class PackFace : public Tunable {
   {
     Tunable::defaultTuneParam(param);
     param.grid = dim3( (threads()+param.block.x-1) / param.block.x, 1, 1);
-  }*/
+    }*/
 
   long long bytes() const { 
     size_t faceBytes = (inputPerSite() + outputPerSite())*this->threads()*sizeof(((FloatN*)0)->x);
@@ -1474,9 +1475,9 @@ template <typename FloatN>
 __global__ void packFaceAsqtadKernel(PackParam<FloatN> param)
 {
   const int nFace = 3; //3 faces for asqtad
-  int ctaIter = 0;
-
-  while (int face_idx = (ctaIter*gridDim.x + blockIdx.x)*blockDim.x + threadIdx.x < param.threads) {
+  int threadId = blockIdx.x*blockDim.x + threadIdx.x;
+  while (threadId < param.threads) {
+    int face_idx = threadId;
 
     // determine which dimension we are packing
     const int dim = dimFromFaceIndex(face_idx, param);
@@ -1530,7 +1531,7 @@ __global__ void packFaceAsqtadKernel(PackParam<FloatN> param)
       }
     }
 
-    ctaIter++;
+    threadId += gridDim.x*blockDim.x;
   }
 
 }
@@ -1603,10 +1604,10 @@ template <int dagger, typename FloatN>
 __global__ void packFaceDWKernel(PackParam<FloatN> param)
 {
   const int nFace = 1; // 1 face for dwf
-  int ctaIter = 0;
+  int threadId = blockIdx.x*blockDim.x + threadIdx.x;
+  while (threadId < param.threads) {
+    int face_idx = threadId;
 
-  while (int face_idx = (ctaIter*gridDim.x + blockIdx.x)*blockDim.x + threadIdx.x < param.threads) {
-    
     // determine which dimension we are packing
     const int dim = dimFromFaceIndex(face_idx, param);
     
@@ -1660,7 +1661,7 @@ __global__ void packFaceDWKernel(PackParam<FloatN> param)
       }
     }
     
-    ctaIter++;
+    threadId += gridDim.x*blockDim.x;
   }
 }
 #endif
