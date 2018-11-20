@@ -204,6 +204,10 @@
 
 #define LAUNCH_KERNEL_MG_BLOCK_SIZE(kernel, tp, stream, arg, ...)	\
   switch (tp.block.x) {							\
+  case 2:               \
+    kernel<2,__VA_ARGS__>						\
+      <<< tp.grid, tp.block, tp.shared_bytes, stream >>>(arg);		\
+    break;								\
   case 4:								\
     kernel<4,__VA_ARGS__>						\
       <<< tp.grid, tp.block, tp.shared_bytes, stream >>>(arg);		\
@@ -230,6 +234,10 @@
     break;								\
   case 36:								\
     kernel<36,__VA_ARGS__>						\
+      <<< tp.grid, tp.block, tp.shared_bytes, stream >>>(arg);		\
+    break;								\
+  case 40:								\
+    kernel<40,__VA_ARGS__>						\
       <<< tp.grid, tp.block, tp.shared_bytes, stream >>>(arg);		\
     break;								\
   case 54:								\
