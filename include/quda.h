@@ -245,6 +245,8 @@ extern "C" {
 
     /** Preconditioner instance, e.g., multigrid */
     void *preconditioner;
+    void *preconditionerUP;
+    void *preconditionerDN;
 
     /** Deflation instance */
     void *deflation_op;

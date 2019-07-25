@@ -21,6 +21,7 @@
 #endif
 
 #include <qio_field.h>
+#include "../quda-QKXTM-Multigrid-PlugIn/include/QKXTM_mapping_parity.h"
 
 #define MAX(a,b) ((a)>(b)?(a):(b))
 

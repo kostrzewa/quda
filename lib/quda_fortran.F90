@@ -203,6 +203,8 @@ module quda_fortran
      QudaInverterType :: inv_type_precondition
 
      integer(8) :: preconditioner ! pointer to preconditioner instance
+     integer(8) :: preconditionerUP
+     integer(8) :: preconditionerDN
 
      integer(8) :: deflation_op ! pointer to deflation instance
 
