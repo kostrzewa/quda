@@ -106,7 +106,7 @@ target_include_directories(quda PUBLIC $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/inc
 # if CUDA_CUDA_LIBRARY (driver api) is not found look for stubs
 FIND_LIBRARY(CUDA_CUDA_LIBRARY cuda HINTS ${CUDA_TOOLKIT_ROOT_DIR}/lib/ ${CUDA_TOOLKIT_ROOT_DIR}/lib/stubs)
 
-target_link_libraries(quda ${CMAKE_THREAD_LIBS_INIT} ${QUDA_LIBS} ${CUDA_CUDA_LIBRARY})
+#target_link_libraries(quda ${CMAKE_THREAD_LIBS_INIT} ${QUDA_LIBS} ${CUDA_CUDA_LIBRARY})
 
 if(QUDA_QIO)
   target_link_libraries(quda ${QIO_LIB} ${LIME_LIB})
@@ -140,7 +140,7 @@ endif()
 # malloc.cpp uses both the driver and runtime api
 # So we need to find the CUDA_CUDA_LIBRARY (driver api) or the stub version
 find_library(CUDA_CUDA_LIBRARY cuda HINTS ${CUDA_TOOLKIT_ROOT_DIR}/lib/ ${CUDA_TOOLKIT_ROOT_DIR}/lib/stubs)
-target_link_libraries(quda ${CUDA_CUDA_LIBRARY})
+#target_link_libraries(quda ${CUDA_CUDA_LIBRARY})
 
 # if we did not find Eigen but downloaded it we need to add it as dependency so the download is done first
 if (QUDA_DOWNLOAD_EIGEN)

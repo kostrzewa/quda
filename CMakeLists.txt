@@ -177,18 +177,7 @@ set(CPU_ARCH ${CMAKE_HOST_SYSTEM_PROCESSOR})
 #######################################################################
 # we need to check for some packages
 find_package(PythonInterp)
-
-if(${CMAKE_VERSION} VERSION_GREATER 3.7.99)
-  find_package(CUDAWrapper)
-  set(USING_CUDA_LANG_SUPPORT True)
-  set(CMAKE_CUDA_STANDARD 11)
-  set(CMAKE_CUDA_STANDARD_REQUIRED True)
-else()
-  set(CUDA_HOST_COMPILER "${CMAKE_CXX_COMPILER}" CACHE FILEPATH "Host side compiler used by NVCC")
-  mark_as_advanced(CUDA_HOST_COMPILER)
-  find_package(CUDA REQUIRED)
-  set(USING_CUDA_LANG_SUPPORT False)
-endif()
+find_package(CUDAWrapper)
 
 #######################################################################
 ## QUDA depends on Eigen
